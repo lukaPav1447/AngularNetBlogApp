@@ -1,0 +1,12 @@
+# Ignore Visual Studio temporary files, build results, and
+# Windows file system files
+
+*.cache
+*.pdb
+*.obj
+*.exe
+*.dll
+*.vs/
+.vs/
+bin/
+obj/
