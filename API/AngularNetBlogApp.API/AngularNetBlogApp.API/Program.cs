@@ -1,4 +1,6 @@
 using AngularNetBlogApp.API.Data;
+using AngularNetBlogApp.API.Repositories.Implementation;
+using AngularNetBlogApp.API.Repositories.Interface;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +16,8 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("AngularNetBlogAppConnectionString"));
 });
+
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
 var app = builder.Build();
 
