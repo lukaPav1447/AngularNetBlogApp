@@ -1,6 +1,7 @@
 ﻿using AngularNetBlogApp.API.Data;
 using AngularNetBlogApp.API.Models.Domain;
 using AngularNetBlogApp.API.Repositories.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace AngularNetBlogApp.API.Repositories.Implementation
 {
@@ -18,6 +19,11 @@ namespace AngularNetBlogApp.API.Repositories.Implementation
             await dbContext.SaveChangesAsync();
 
             return category;
+        }
+
+        public async Task<IEnumerable<Category>> GetAllAsync()
+        {
+            return await dbContext.Categories.ToListAsync();
         }
     }
 }
