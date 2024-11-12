@@ -49,5 +49,30 @@ namespace AngularNetBlogApp.API.Controllers
 
             return Ok(response);
         }
+        [HttpGet]
+        public async Task<IActionResult> GetAllBlogPosts()
+        {
+            var blogPosts = await blogPostRepository.GetAllAsync();
+
+            var response = new List<BlogPostDto>();
+
+            foreach (var blogPost in blogPosts)
+            {
+                response.Add(new BlogPostDto
+                {
+                    Id = blogPost.Id,
+                    Author = blogPost.Author,
+                    Content = blogPost.Content,
+                    FeaturedImageUrl = blogPost.FeaturedImageUrl,
+                    UrlHandle = blogPost.UrlHandle,
+                    Title = blogPost.Title,
+                    PublishedDate = blogPost.PublishedDate,
+                    IsVisible = blogPost.IsVisible,
+                    ShortDescription = blogPost.ShortDescription,
+                });
+            }
+
+            return Ok(response);
+        }
     }
 }
