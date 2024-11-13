@@ -10,10 +10,12 @@ namespace AngularNetBlogApp.API.Controllers
     public class BlogPostsController : ControllerBase
     {
         private readonly IBlogPostRepository blogPostRepository;
+        private readonly ICategoryRepository categoryRepository;
 
-        public BlogPostsController(IBlogPostRepository blogPostRepository)
+        public BlogPostsController(IBlogPostRepository blogPostRepository, ICategoryRepository categoryRepository)
         {
             this.blogPostRepository = blogPostRepository;
+            this.categoryRepository = categoryRepository;
         }
 
         [HttpPost]
@@ -29,7 +31,17 @@ namespace AngularNetBlogApp.API.Controllers
                 PublishedDate = request.PublishedDate,
                 IsVisible = request.IsVisible,
                 ShortDescription = request.ShortDescription,
+                Categories = new List<Category>()
             };
+
+            foreach (var categoryGuid in request.Categories)
+            {
+                var existingCategory = await categoryRepository.GetById(categoryGuid);
+                if (existingCategory is not null)
+                {
+                    blogPost.Categories.Add(existingCategory);
+                }
+            }
 
             blogPost = await blogPostRepository.CreateAsync(blogPost);
 
@@ -44,6 +56,12 @@ namespace AngularNetBlogApp.API.Controllers
                 PublishedDate = blogPost.PublishedDate,
                 IsVisible = blogPost.IsVisible,
                 ShortDescription = blogPost.ShortDescription,
+                Categories = blogPost.Categories.Select(x => new CategoryDto
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    UrlHandle = x.UrlHandle,
+                }).ToList()
 
             };
 
@@ -69,6 +87,12 @@ namespace AngularNetBlogApp.API.Controllers
                     PublishedDate = blogPost.PublishedDate,
                     IsVisible = blogPost.IsVisible,
                     ShortDescription = blogPost.ShortDescription,
+                    Categories = blogPost.Categories.Select(x => new CategoryDto
+                    {
+                        Id = x.Id,
+                        Name = x.Name,
+                        UrlHandle = x.UrlHandle,
+                    }).ToList()
                 });
             }
 
