@@ -1,4 +1,6 @@
 ﻿using AngularNetBlogApp.API.Models.Domain;
+using AngularNetBlogApp.API.Models.DTO;
+using AngularNetBlogApp.API.Repositories.Interface;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AngularNetBlogApp.API.Controllers
@@ -7,6 +9,37 @@ namespace AngularNetBlogApp.API.Controllers
     [ApiController]
     public class ImagesController : ControllerBase
     {
+        private readonly IImageRepository imageRepository;
+
+        public ImagesController(IImageRepository imageRepository)
+        {
+            this.imageRepository = imageRepository;
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAllImages()
+        {
+            var images = await imageRepository.GetAll();
+
+            var response = new List<BlogImageDto>();
+
+            foreach (var image in images)
+            {
+                response.Add(new BlogImageDto
+                {
+                    Id = image.Id,
+                    Title = image.Title,
+                    DateCreated = DateTime.Now,
+                    FileExtension = image.FileExtension,
+                    FileName = image.FileName,
+                    Url = image.Url
+                });
+            }
+
+            return Ok(response);
+        }
+
+
         [HttpPost]
         public async Task<IActionResult> UploadImage([FromForm] IFormFile file, [FromForm] string fileName, [FromForm] string title)
         {
@@ -21,7 +54,23 @@ namespace AngularNetBlogApp.API.Controllers
                     Title = title,
                     DateCreated = DateTime.Now,
                 };
+
+                blogImage = await imageRepository.Upload(file, blogImage);
+
+                var response = new BlogImageDto
+                {
+                    Id = blogImage.Id,
+                    Title = blogImage.Title,
+                    DateCreated = DateTime.Now,
+                    FileExtension = blogImage.FileExtension,
+                    FileName = blogImage.FileName,
+                    Url = blogImage.Url
+                };
+
+                return Ok(response);
             }
+
+            return BadRequest(ModelState);
         }
 
         private void ValidateFileUpload(IFormFile file)
