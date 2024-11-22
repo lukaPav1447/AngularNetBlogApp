@@ -1,6 +1,7 @@
 ﻿using AngularNetBlogApp.API.Models.Domain;
 using AngularNetBlogApp.API.Models.DTO;
 using AngularNetBlogApp.API.Repositories.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AngularNetBlogApp.API.Controllers
@@ -38,6 +39,7 @@ namespace AngularNetBlogApp.API.Controllers
         }
 
         [HttpGet]
+        [Authorize]
 
         public async Task<IActionResult> GetAllCategories()
         {
