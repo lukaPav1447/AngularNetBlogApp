@@ -1,6 +1,7 @@
 ﻿using AngularNetBlogApp.API.Models.Domain;
 using AngularNetBlogApp.API.Models.DTO;
 using AngularNetBlogApp.API.Repositories.Interface;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AngularNetBlogApp.API.Controllers
@@ -19,6 +20,7 @@ namespace AngularNetBlogApp.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> CreateBlogPost([FromBody] CreateBlogPostRequestDto request)
         {
             var blogPost = new BlogPost
@@ -165,6 +167,7 @@ namespace AngularNetBlogApp.API.Controllers
 
         [HttpPut]
         [Route("{id:Guid}")]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> UpdateBlogPostById([FromRoute] Guid id, UpdateBlogPostRequestDto request)
         {
             var blogPost = new BlogPost
@@ -221,6 +224,7 @@ namespace AngularNetBlogApp.API.Controllers
 
         [HttpDelete]
         [Route("{id:Guid}")]
+        [Authorize(Roles = "Writer")]
 
         public async Task<IActionResult> DeleteBlogPost([FromRoute] Guid id)
         {

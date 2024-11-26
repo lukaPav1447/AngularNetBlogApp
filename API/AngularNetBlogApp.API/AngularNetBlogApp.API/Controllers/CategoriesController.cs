@@ -18,6 +18,7 @@ namespace AngularNetBlogApp.API.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> CreateCategory([FromBody] CreateCategoryRequestDto request)
         {
             var category = new Category
@@ -39,7 +40,6 @@ namespace AngularNetBlogApp.API.Controllers
         }
 
         [HttpGet]
-        [Authorize]
 
         public async Task<IActionResult> GetAllCategories()
         {
@@ -83,6 +83,7 @@ namespace AngularNetBlogApp.API.Controllers
 
         [HttpPut]
         [Route("{id:Guid}")]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> EditCategory([FromRoute] Guid id, UpdateCategoryRequestDto request)
         {
             var category = new Category
@@ -111,6 +112,7 @@ namespace AngularNetBlogApp.API.Controllers
 
         [HttpDelete]
         [Route("{id:Guid}")]
+        [Authorize(Roles = "Writer")]
         public async Task<IActionResult> DeleteCategory([FromRoute] Guid id)
         {
             var category = await categoryRepository.DeleteAsync(id);
