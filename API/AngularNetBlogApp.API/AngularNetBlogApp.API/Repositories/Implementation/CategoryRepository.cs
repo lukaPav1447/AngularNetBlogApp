@@ -22,9 +22,24 @@ namespace AngularNetBlogApp.API.Repositories.Implementation
         }
 
 
-        public async Task<IEnumerable<Category>> GetAllAsync()
+        public async Task<IEnumerable<Category>> GetAllAsync(string? query)
         {
-            return await dbContext.Categories.ToListAsync();
+            //Query
+            var categories = dbContext.Categories.AsQueryable();
+
+            //Filtering
+
+            if (string.IsNullOrWhiteSpace(query) == false)
+            {
+                categories = categories.Where(x => x.Name.Contains(query));
+            }
+
+            //Sorting
+
+            //Pagination
+
+            return await categories.ToListAsync();
+
         }
 
         public async Task<Category?> GetById(Guid id)

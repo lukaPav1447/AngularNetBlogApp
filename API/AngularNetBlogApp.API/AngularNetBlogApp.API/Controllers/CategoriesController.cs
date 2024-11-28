@@ -41,9 +41,9 @@ namespace AngularNetBlogApp.API.Controllers
 
         [HttpGet]
 
-        public async Task<IActionResult> GetAllCategories()
+        public async Task<IActionResult> GetAllCategories([FromQuery] string? query)
         {
-            var categories = await categoryRepository.GetAllAsync();
+            var categories = await categoryRepository.GetAllAsync(query);
 
             var response = new List<CategoryDto>();
             foreach (var category in categories)
