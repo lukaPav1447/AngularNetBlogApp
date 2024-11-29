@@ -41,9 +41,14 @@ namespace AngularNetBlogApp.API.Controllers
 
         [HttpGet]
 
-        public async Task<IActionResult> GetAllCategories([FromQuery] string? query)
+        public async Task<IActionResult> GetAllCategories(
+            [FromQuery] string? query,
+            [FromQuery] string? sortBy,
+            [FromQuery] string? sortDirection,
+            [FromQuery] int? pageNumber,
+            [FromQuery] int? pageSize)
         {
-            var categories = await categoryRepository.GetAllAsync(query);
+            var categories = await categoryRepository.GetAllAsync(query, sortBy, sortDirection, pageNumber, pageSize);
 
             var response = new List<CategoryDto>();
             foreach (var category in categories)
@@ -130,6 +135,15 @@ namespace AngularNetBlogApp.API.Controllers
             };
 
             return Ok(response);
+        }
+
+        [HttpGet]
+        [Route("count")]
+        //[Authorize(Roles = "Writer")]
+        public async Task<IActionResult> GetCategoriesTotal()
+        {
+            var count = await categoryRepository.GetCount();
+            return Ok(count);
         }
     }
 }
